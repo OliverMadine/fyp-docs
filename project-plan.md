@@ -2,7 +2,11 @@
 
 ## Part 1
 
+## TODO
+- 
+
 ### v0
+- Testing framework
 - Implement Arbitrary for basic parsers
 - Add quickCheck for simple property
 
