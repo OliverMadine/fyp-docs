@@ -2,8 +2,9 @@
 
 ## Part 1
 
-## TODO
-- 
+1. how do we prevent flagging the same bug twice?
+2. Fuzzing takes ages (so implement faster)
+3. compute power?
 
 ### v0
 - Testing framework
@@ -36,3 +37,7 @@
 
 ### v4
 - Differential testing
+
+## Part 3: Eval
+
+- Testing if any bugs are triggered by real parsers (e.g. wacc compilers)
