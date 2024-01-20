@@ -1,2 +1,4 @@
 interim-report/*
 !interim-report/interim-report.tex
+!interim-report/interim-report.bib
+prompt*
