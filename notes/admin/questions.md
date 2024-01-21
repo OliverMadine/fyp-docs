@@ -1,5 +1,13 @@
 Ally
-- Parsers written with parser combinators give us the grammar for free.
-- Fuzzing programs where the input must be parsed is hard because most random inputs fail, we get path explosion with symbolic fuzzing, or if have a grammar, it's hard to test if the program conforms to the grammar.
-- Programs with inputs that are parsed with parser combinators give us an efficient way of fuzzing inputs.
-- thoughts? 
+- Fuzzing programs where the input must be parsed is hard
+    - Most random inputs fail
+    - We get path explosion with symbolic fuzzing
+    - Expected grammar may deviated from grammar encoded into the parser
+- Parsers written with parser combinators are strongly-typed.
+    - We can generated inputs based on the structure of these parsers
+    - We effectively get the grammar of the parser for free.
+- Grammar based fuzzing
+    - We don't know if the expected grammar deviates from the actual grammar encoded into the aprser
+
+Conclusion: Programs using parser combinators give us an efficient way of fuzzing inputs.
+- thoughts?
