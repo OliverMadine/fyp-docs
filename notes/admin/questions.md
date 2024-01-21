@@ -12,6 +12,11 @@ Ally
 Conclusion: Programs using parser combinators give us an efficient way of fuzzing inputs.
 - thoughts?
 
+- benefits vs grammar based
+    - grammar might not be correctly implemented
+    - grammar extraction not required (inherent to parser combinators)
+    - grammar is often not machine readable (converting is time consuming)
+
 Questions
 - benefits of this vs generating inputs by looking at the AST?
 - benefits of this vs looking at the Parse tree?
