@@ -11,3 +11,7 @@ Ally
 
 Conclusion: Programs using parser combinators give us an efficient way of fuzzing inputs.
 - thoughts?
+
+Questions
+- benefits of this vs generating inputs by looking at the AST?
+- benefits of this vs looking at the Parse tree?
