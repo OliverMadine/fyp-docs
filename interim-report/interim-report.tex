@@ -2,51 +2,49 @@
 
 \usepackage[margin=2cm]{geometry}
 \usepackage{titling}
-\usepackage{url}
 \usepackage[numbers]{natbib}
-\usepackage{multicol}
+\usepackage{parskip}
+\usepackage[hyphens]{url}
 
 % Config
+\bibliographystyle{unsrtnat}
 
 % Title
 \title{Fuzzing for Parser Combinators \\ {\large BEng Project Interim Report}}
 \author{Oliver Madine}
-\date{}
+\date{Janurary 21, 2024}
 
 % Document
 \begin{document}
 \maketitle
 
-\begin{multicols}{2}
+% \begin{multicols}{2}
 
-\section{Introduction}
+\section{Introduction} % 1.5 pages
 
-% 1. Why parsers are important? (cite curve)
-Parsers are a critical component of many software systems, including compiler
-Testing accounts for 50\% of software development cost (cite quickCheck)
-\\
+% 1. Why fuzzing for parsers is important?
 
-% 2. In this work we do W (?).
-In this project, we explore how we can improve the robustness of parsers by presenting several
-fuzzing techniques in the unique context of parser combinators libraries. We use Gigaparsec as
-our target library. It could be argued that many bugs discovered in this project are niche cases
-and unlikely to be found in practice. A formal evaluation of the significance of any bugs discovered
-is left to future work. We primarily focus our attention on metamorphic testing by building on the 
-work of (cite selective parser combinators) to discover and test new parser combinator laws in
-practice.
+Parsers are critical components of many software systems with compilers being a stand out example. Issues in these systems can be devastating; recently, a bug in the Vyper compiler caused a security vulnerability for Curve Finance, reportedly costing up to \$62 million \cite{curve}. Extensive testing of parsing libraries is therefore vital to both support overall correctness of these systems and establish user trust. Traditional software testing methods, however, can be expensive, accounting for up to 50\% of development costs \cite{quickcheck}.
+
+% 2. In this work we do X.
+% unique that we have the grammar (\cite{staged-selective})
+% 
+% 
+In this project, we explore how we can improve the correctness of parsers by presenting several fuzzing techniques in the unique context of parser combinators libraries. Using Gigaparsec as our target library, we primarily focus our attention on metamorphic testing by building on the work of \cite{staged-selective} to discover and test new parser combinator laws in practice.
 
 % 3. interesting / challenges
-left-recursion, corresponding inputs / coverage
-\\
+% left-recursion
+% corresponding inputs / achieving good coverage
+% - symbolic: path explosion
+% - parser directed: performance
 
 % 4. Previous work on X has addressed these with Y, but the problems with this are Z.
 parser directed fuzzing + Constraint-based test generation + left recursion address these challenged but limitations
-\\
 
 % 5) This has the following appealing properties and our experiments show this and that.
-We hypothesize that Gigapasec bugs found through our randomized testing will have a high likelihood of being relevant in practice as seems to be true for compiler fuzzing (cite importance).
+We hypothesize that Gigapasec bugs found through our randomized testing will have a high likelihood of being relevant in practice as seems to be the case for compiler fuzzing \cite{fuzzing-importance}. It could be argued that many bugs discovered in this project are niche cases and unlikely to be found in practice. A formal evaluation of the significance of any bugs discovered is left to future work.
 
-\section{Background}
+\section{Background} % 10 pages
 % TODO: google what goes in a background section?
 % gigaparsec
 % parsec
@@ -61,15 +59,18 @@ combining smaller parsers.
 % quickspec
 % parsley
 
-\section{Evaluation plan}
+\section{Project Plan} % 1 page
+% When busy?
+% Time for write up
+% Time for running experiments
+
+\section{Evaluation Plan} % 1 page
 % old bugs
 % coverage
 % new bugs
-% bug triggered by real world parsers? (e.g. test if jamies wacc implementation hits it)
 
+% \end{multicols}
 
-\end{multicols}
-
+\raggedright
 \bibliography{interim-report.bib}
-\bibliographystyle{unsrtnat}
 \end{document}
