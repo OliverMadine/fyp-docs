@@ -8,6 +8,9 @@
 
 % Config
 \bibliographystyle{unsrtnat}
+\let\oldciteauthor\citeauthor
+\renewcommand{\citeauthor}[1]{\oldciteauthor{#1} \cite{#1}}
+
 
 % Title
 \title{Fuzzing for Parser Combinators \\ {\large BEng Project Interim Report}}
@@ -23,50 +26,67 @@
 \section{Introduction} % 1.5 pages
 
 % 1. Why fuzzing for parsers is important?
-
+\subsection{Motivation}
 Parsers are critical components of many software systems with compilers being a stand out example. Issues in these systems can be devastating; recently, a bug in the Vyper compiler caused a security vulnerability for Curve Finance, reportedly costing up to \$62 million \cite{curve}. Extensive testing of parsing libraries is therefore vital to both support overall correctness of these systems and establish user trust. Traditional software testing methods, however, can be expensive, accounting for up to 50\% of development costs \cite{quickcheck}.
 
 % 2. In this work we do X.
-% unique that we have the grammar (\cite{staged-selective})
-% 
-% 
-In this project, we explore how we can improve the correctness of parsers by presenting several fuzzing techniques in the unique context of parser combinators libraries. Using Gigaparsec as our target library, we primarily focus our attention on metamorphic testing by building on the work of \cite{staged-selective} to discover and test new parser combinator laws in practice.
+\subsection{Project}
+This project explores the application of various fuzzing techniques in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{gigaparsec} as the case study. Parser combinator libraries are generally domain specific languages (DSLs) embedded into functional host languages, resulting in strongly-typed application programming interfaces (APIs) \cite{monadic-combinators, parsec}. This highlights the first distinct advantage of the project: the specification of valid parsers is defined through typing, allowing well-defined parsers to be synthesised randomly. The second uniquely interesting aspect of this approach is that parser combinator libraries embed the target grammar into the host language \cite{combinator-parsing}. As a result, the structure of the synthesised parsers can be inspected to guide input generation for the parsers. Although many techniques are considered, metamorphic fuzzing using parser combinator laws outlined by \citeauthor{staged-selective} is the primary method investigated.
 
+\subsection{Challenges}
 % 3. interesting / challenges
 % left-recursion
 % corresponding inputs / achieving good coverage
 % - symbolic: path explosion
 % - parser directed: performance
+% - grammar based: mismatch between actual and 
+
+Some of the novel challenges of this work include handling non-termination of left-recursive parsers, and constructing valid inputs for generated parsers. Left recursion 
+\cite{left-recursive}
 
 % 4. Previous work on X has addressed these with Y, but the problems with this are Z.
-parser directed fuzzing + Constraint-based test generation + left recursion address these challenged but limitations
+\subsection{Prior Work}
+% parser directed fuzzing + Constraint-based test generation + left recursion address these challenged but limitations
+% Critic parser-directed fuzzing?
+\cite{left-recursive-detect}
 
 % 5) This has the following appealing properties and our experiments show this and that.
-We hypothesize that Gigapasec bugs found through our randomized testing will have a high likelihood of being relevant in practice as seems to be the case for compiler fuzzing \cite{fuzzing-importance}. It could be argued that many bugs discovered in this project are niche cases and unlikely to be found in practice. A formal evaluation of the significance of any bugs discovered is left to future work.
+% \subsection{Results}
+% TODO: move to eval?
+% We hypothesize that any Gigapasec bugs found will have a high likelihood of being relevant in practice as seems to be the case for compiler fuzzing \cite{fuzzing-importance}. It could be argued that many bugs discovered in this project are niche cases and unlikely to be found in practice. A formal evaluation of the significance of any bugs discovered is left to future work.
 
 \section{Background} % 10 pages
-% TODO: google what goes in a background section?
+% TODO: google what should go in a background section?
 % gigaparsec
 % parsec
 % fuzzing
 % metamorphic testing
 % differential testing
 % parser combinators
-Parser Combinator libraries are an increasingly popular method of writing parsers by treating parsers as first class values to form larger parsers by
-combining smaller parsers.
+% Parser Combinator libraries are an increasingly popular method of writing parsers by treating parsers as first class values to form larger parsers by
+% combining smaller parsers.
 % parser combinators laws
 % quickcheck
 % quickspec
 % parsley
+% - how do we decide the approach?
+%     - read paper about causes of bugs
+%     - differential against parsley: unlikely to catch unconsidered edge case: 
+%     - mutation based on laws: we must find and verify these laws
+%     - differential testing on optimisations: cannot find bugs in unoptimised gigaparsec. gigaparsec is yet to implement optimisations
+% - Other Challenges
 
 \section{Project Plan} % 1 page
+% milestones
+% soft deadlines
 % When busy?
 % Time for write up
 % Time for running experiments
 
 \section{Evaluation Plan} % 1 page
 % old bugs
-% coverage
+% code coverage
+% mutation coverage?
 % new bugs
 
 % \end{multicols}
