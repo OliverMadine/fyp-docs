@@ -6,6 +6,9 @@
 \usepackage{parskip}
 \usepackage[hyphens]{url}
 
+% Questions
+% better to move challenges (1.3) and prior work (1.4) to background?
+
 % Config
 \bibliographystyle{unsrtnat}
 \let\oldciteauthor\citeauthor
@@ -24,32 +27,24 @@
 \section{Introduction} % 1.5 pages
 
 % 1. Why fuzzing for parsers is important?
-% q1: how does the error example relate to the parser? it could just be inherent to the compiler
-%q: why is testing parsers vital/is it the only way to improve parser reliability?
-
 \subsection{Motivation}
-Parsers are critical components of many software systems with compilers being a stand out example. Issues in these systems can be devastating; recently, a bug in the Vyper compiler caused a security vulnerability for Curve Finance, reportedly costing up to \$62 million \cite{curve}. Extensive testing of parsing libraries is therefore vital to both support overall correctness of these systems and establish user trust. Traditional software testing methods, however, can be expensive, accounting for up to 50\% of development costs \cite{quickcheck}.
+Parsers are critical components of many software systems with compilers being a stand out example. Issues in these systems can be devastating; recently, a bug in the Vyper compiler caused a security vulnerability for Curve Finance, reportedly costing up to \$62 million \cite{curve}. Extensive testing of parsing libraries is vital to both support overall correctness of these systems and establish user trust. Traditional software testing methods, however, can be expensive, accounting for up to 50\% of development costs \cite{quickcheck}.
 
 % 2. In this work we do X.
 \subsection{Project}
-This project explores the application of various fuzzing techniques in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{Gigaparsec} as the case study. Although many techniques are considered, metamorphic fuzzing \cite{metamorphic} using parser combinator laws outlined by \citeauthor{parsley} is the primary method investigated.
+This project explores the application of various fuzzing techniques in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{Gigaparsec} as the case study. Although many techniques are considered, the primary method investigated involves synthesising arbitrary parsers with corresponding inputs and using metamorphic fuzzing \cite{metamorphic} to test adherence to the parser combinator laws outlined by \citeauthor{parsley}.
 
 \subsection{Challenges}
 % 3. interesting / challenges
-% Some of the unique challenges of this work include handling non-terminating parsers, and constructing valid inputs for generated parsers.
-
-
-\subsubsection{Left Recursion}
-Left recursive grammars are grammars that have at least one non-terminal element eventually deriving to a form with itself as the left-most symbol \cite{left-recursive}. These grammars can be handled with chain combinators \cite{design-patterns}, but naive parser compositions can still lead to infinite recursion. In general, parsers that invoke themselves without consuming any input will not terminate and are avoided when generating new parsers.
 
 \subsubsection{Sample Generation}
-When executing randomly synthesised parsers, failing to parse an input token may cause the parser to quickly terminate. This limits both the behavioural validation and statement coverage of the test, therefore, both rejection and acceptance states should be tested. Arbitrary inputs are likely to cause substantially more parse rejections than acceptances. A significant challenge of the project is to generate inputs that should be accepted by a given parser.
+When executing a test case for a parser, failing to parse an input token may cause the parser to quickly return. This limits both the statement coverage and behavioural validation of the test, therefore, both the rejection and acceptance states of a parser should be tested. Arbitrary inputs are likely to cause substantially more rejections than acceptances. A significant challenge of the project is to generate valid inputs for a given parser. 
+
+\subsubsection{Left Recursion}
+Left recursive grammars are grammars that have at least one non-terminal element eventually deriving to a form with itself as the left-most symbol \cite{left-recursive}. These grammars can be handled with chain combinators \cite{design-patterns}, but naive parser compositions can still lead to infinite recursion. In general, parsers that invoke themselves without consuming any input will not terminate, and thus cannot be tested and will be problematic if randomly generated.
 
 % 4. Previous work on X has addressed these with Y, but the problems with this are Z.
 \subsection{Prior Work}
-
-\subsubsection{Left Recursion}
-Although there has been some work towards designing parser combinators libraries that terminate with left-recursive structures \cite{left-recursive-detect}, these libraries currently face performance limitations and are not widely adopted. There is no prior work towards exploring the random generation of terminating parsers. 
 
 \subsubsection{Sample Generation}
 
@@ -61,11 +56,14 @@ Symbolic execution for fuzzing tackles the sample generation challenge by using 
 
 Grammar-based fuzzing, which involves generating samples directly from a formal grammar, avoids much of the trial and error of random input generation for parsers \cite{grammar}. Traditionally, grammars are difficult to write and maintain, often do not reflect the actual grammar implemented by a parser, and are not necessarily machine readable.
 
+\subsubsection{Left Recursion}
+Although there has been some work towards designing parser combinators libraries that terminate with left-recursive structures \cite{left-recursive-detect}, these libraries currently face performance limitations and are not widely adopted. There is no prior work towards exploring the random generation of terminating parsers. 
+
 % 5) This has the following appealing properties and our experiments show this and that.
 \subsection{Unique Benefits}
-Parser combinator libraries are generally Domain-Specific Languages (DSLs) embedded into functional host languages, resulting in strongly-typed APIs \cite{monadic-combinators, parsec}. This highlights the first uniquely interesting advantage of the project: the specification of valid parsers is defined directly through the parser typing, allowing well-defined parsers to be synthesised randomly.
+Parser combinator libraries are generally Domain-Specific Languages (DSLs) embedded into functional host languages, resulting in strongly-typed APIs \cite{monadic-combinators, parsec}. This highlights the first uniquely interesting advantage of the project: the specification of valid parsers is defined directly through the parser typing, allowing well-defined parsers to be generated randomly.
 
-The second novel aspect of this approach is that parser combinator libraries embed the target grammar into the host language \cite{combinator-parsing}. The structure of the synthesised parsers can be inspected to guide valid input generation for the parsers.
+The second novel aspect of this approach is that parser combinator libraries embed the target grammar into the host language \cite{combinator-parsing}. The structure of the generated parsers can be inspected to guide valid input generation for the parsers.
 
 Considering these benefits, we propose that fuzzing for parser combinators will systematically verify parser combinator libraries by synthesising new parsers and effectively covering their input spaces.
 
