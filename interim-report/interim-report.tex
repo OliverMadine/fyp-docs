@@ -52,44 +52,44 @@ When executing randomly synthesised parsers, failing to parse an input token may
 Although there has been some work towards designing parser combinators libraries that terminate with left-recursive structures \cite{left-recursive-detect}, these libraries currently face performance limitations and are not widely adopted. There is no prior work towards exploring the random generation of terminating parsers. 
 
 \subsubsection{Sample Generation}
-% parser directed fuzzing + Constraint-based test generation + left recursion address these challenged but limitations
 
 Several techniques of sample generation have been explored in the context of parsers. 
 
 \citeauthor{parser-directed} explores parser-directed fuzzing by using dynamic tainting to resolve parse rejections. This approach relies on a direct taint, which is often ineffective during tokenization stages of parsers when the data flow is broken, limiting the exploration of the input space.
 
-Symbolic execution for fuzzing tackles the sample generation challenge by using constraint solving to increases statement coverage \cite{klee}. Path explosion is particularly problematic in the context of parsers as paths are predominantly parse rejections \cite{path-explosion}. Samples that are accepted by the parser remain highly improbable \cite{parser-directed}.
+Symbolic execution for fuzzing tackles the sample generation challenge by using constraint solving to increases statement coverage \cite{klee}. Path explosion is particularly problematic in the context of parsers as paths predominantly cause parse rejections \cite{path-explosion}. Samples that are accepted by the parser remain highly improbable \cite{parser-directed}.
 
 Grammar-based fuzzing, which involves generating samples directly from a formal grammar, avoids much of the trial and error of random input generation for parsers \cite{grammar}. Traditionally, grammars are difficult to write and maintain, often do not reflect the actual grammar implemented by a parser, and are not necessarily machine readable.
 
 % 5) This has the following appealing properties and our experiments show this and that.
-\subsection{Unique Benefits} % \subsection{Results}
-Parser combinator libraries are generally domain specific languages (DSLs) embedded into functional host languages, resulting in strongly-typed application programming interfaces (APIs) \cite{monadic-combinators, parsec}. This highlights the first uniquely interesting advantage of the project: the specification of valid parsers is defined directly through the parser typing, allowing well-defined parsers to be synthesised randomly.
+\subsection{Unique Benefits}
+Parser combinator libraries are generally Domain-Specific Languages (DSLs) embedded into functional host languages, resulting in strongly-typed APIs \cite{monadic-combinators, parsec}. This highlights the first uniquely interesting advantage of the project: the specification of valid parsers is defined directly through the parser typing, allowing well-defined parsers to be synthesised randomly.
 
 The second novel aspect of this approach is that parser combinator libraries embed the target grammar into the host language \cite{combinator-parsing}. The structure of the synthesised parsers can be inspected to guide valid input generation for the parsers.
 
 Considering these benefits, we propose that fuzzing for parser combinators will systematically verify parser combinator libraries by synthesising new parsers and effectively covering their input spaces.
 
+% grading criteria: analysis, critical judgement, generalising common aspects, synthesis / organised, alternative approaches 
 \section{Background} % 10 pages
-% TODO: google what should go in a background section?
-% Gigaparsec
-% parsec
-% fuzzing
-% metamorphic testing
-% differential testing
-% parser combinators
-% Parser Combinator libraries are an increasingly popular method of writing parsers by treating parsers as first class values to form larger parsers by
-% combining smaller parsers.
-% parser combinators laws
-% quickcheck
-% quickspec
+
+\subsection{Parser Combinators}
+% Parser Combinator libraries are an increasingly popular method of writing parsers by treating parsers as first class values to form larger parsers by combining smaller parsers.
+\subsubsection{Parsec}
+\subsubsection{Parsec}
 % parsley
-% - how do we decide the approach?
-%     - read paper about causes of bugs
+\subsubsection{Gigaparsec}
+\subsubsection{Laws}
+
+\subsection{Fuzzing}
+\subsubsection{Metamorphic Testing}
+\subsubsection{Differential Testing}
 %     - differential against parsley: unlikely to catch unconsidered edge case: 
 %     - mutation based on laws: we must find and verify these laws
 %     - differential testing on optimisations: cannot find bugs in unoptimised Gigaparsec. Gigaparsec is yet to implement optimisations
-% - Other Challenges
+\subsubsection{QuickCheck}
+\subsubsection{Quickspec}
+
+\subsection{Summary}
 
 \section{Evaluation Plan} % 1 page
 
