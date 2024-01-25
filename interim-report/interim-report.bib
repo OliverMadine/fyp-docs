@@ -103,10 +103,20 @@
   doi={10.1109/TSE.2014.2372785}
 }
 
-@article{left-recursive-detect,
-  title={Direct left-recursive parsing expression grammars},
-  author={Tratt, Laurence},
-  year={2010}
+@inproceedings{left-recursive-detect,
+  author="Frost, Richard A.
+  and Hafiz, Rahmatullah
+  and Callaghan, Paul",
+  editor="Hudak, Paul
+  and Warren, David S.",
+  title="Parser Combinators for Ambiguous Left-Recursive Grammars",
+  booktitle="Practical Aspects of Declarative Languages",
+  year="2008",
+  publisher="Springer Berlin Heidelberg",
+  address="Berlin, Heidelberg",
+  pages="167--181",
+  abstract="Parser combinators are higher-order functions used to build parsers as executable specifications of grammars. Some existing implementations are only able to handle limited ambiguity, some have exponential time and/or space complexity for ambiguous input, most cannot accommodate left-recursive grammars. This paper describes combinators, implemented in Haskell, which overcome all of these limitations.",
+  isbn="978-3-540-77442-6"
 }
 
 @article{left-recursive,
@@ -117,3 +127,157 @@
   year={2002}
 }
 
+@article{design-patterns,
+  author = {Frost, Richard A. and Hafiz, Rahmatullah},
+  title = {A new top-down parsing algorithm to accommodate ambiguity and left recursion in polynomial time},
+  year = {2006},
+  issue_date = {May 2006},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {41},
+  number = {5},
+  issn = {0362-1340},
+  url = {https://doi.org/10.1145/1149982.1149988},
+  doi = {10.1145/1149982.1149988},
+  abstract = {Top-down backtracking language processors are highly modular, can handle ambiguity, and are easy to implement with clear and maintainable code. However, a widely-held, and incorrect, view is that top-down processors are inherently exponential for ambiguous grammars and cannot accommodate left-recursive productions. It has been known for many years that exponential complexity can be avoided by memoization, and that left-recursive productions can be accommodated through a variety of techniques. However, until now, memoization and techniques for handling left recursion have either been presented independently, or else attempts at their integration have compromised modularity and clarity of the code.},
+  journal = {SIGPLAN Not.},
+  month = {may},
+  pages = {46–54},
+  numpages = {9},
+  keywords = {top-down parsing, parser combinators, memoization, left-recursion, backtracking}
+}
+
+@inproceedings{parser-directed,
+  author = {Mathis, Bj\"{o}rn and Gopinath, Rahul and Mera, Micha\"{e}l and Kampmann, Alexander and H\"{o}schele, Matthias and Zeller, Andreas},
+  title = {Parser-directed fuzzing},
+  year = {2019},
+  isbn = {9781450367127},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  doi = {10.1145/3314221.3314651},
+  abstract = {To be effective, software test generation needs to well cover the space of possible inputs. Traditional fuzzing generates large numbers of random inputs, which however are unlikely to contain keywords and other specific inputs of non-trivial input languages. Constraint-based test generation solves conditions of paths leading to uncovered code, but fails on programs with complex input conditions because of path explosion. In this paper, we present a test generation technique specifically directed at input parsers. We systematically produce inputs for the parser and track comparisons made; after every rejection, we satisfy the comparisons leading to rejection. This approach effectively covers the input space: Evaluated on five subjects, from CSV files to JavaScript, our pFuzzer prototype covers more tokens than both random-based and constraint-based approaches, while requiring no symbolic analysis and far fewer tests than random fuzzers.},
+  booktitle = {Proceedings of the 40th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+  pages = {548–560},
+  numpages = {13},
+  keywords = {fuzzing, parsers, security, test generation},
+  location = {Phoenix, AZ, USA},
+  series = {PLDI 2019}
+}
+
+@article{path-explosion,
+  author = {Cadar, Cristian and Sen, Koushik},
+  title = {Symbolic execution for software testing: three decades later},
+  year = {2013},
+  issue_date = {February 2013},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {56},
+  number = {2},
+  issn = {0001-0782},
+  url = {https://doi.org/10.1145/2408776.2408795},
+  doi = {10.1145/2408776.2408795},
+  abstract = {The challenges---and great promise---of modern symbolic execution techniques, and the tools to help implement them.},
+  journal = {Commun. ACM},
+  month = {feb},
+  pages = {82–90},
+  numpages = {9}
+}
+
+@inproceedings{klee,
+  title={Klee: Unassisted and automatic generation of high-coverage tests for complex systems programs.},
+  author={Cadar, Cristian and Dunbar, Daniel and Engler, Dawson R and others},
+  booktitle={OSDI},
+  volume={8},
+  pages={209--224},
+  year={2008}
+}
+
+@article{grammar,
+  author={Bird, D. L. and Munoz, C. U.},
+  journal={IBM Systems Journal}, 
+  title={Automatic generation of random self-checking test cases}, 
+  year={1983},
+  volume={22},
+  number={3},
+  pages={229-245},
+  keywords={},
+  doi={10.1147/sj.223.0229}
+}
+
+@misc{metamorphic,
+  title={Metamorphic Testing: A New Approach for Generating Next Test Cases}, 
+  author={T. Y. Chen and S. C. Cheung and S. M. Yiu},
+  year={2020},
+  eprint={2002.12543},
+  archivePrefix={arXiv},
+  primaryClass={cs.SE}
+}
+
+@article{garnishing,
+  title={Garnishing parsec with parsley},
+  author={Willis, Jamie and Wu, Nicolas},
+  booktitle={Proceedings of the 9th ACM SIGPLAN International Symposium on Scala},
+  pages={24--34},
+  year={2018}
+}
+
+@phdthesis{parsley,
+  title={The Fastest Parser Combinator Library in the West},
+  author={Willis, Jamie},
+  year={2018},
+  school={University of Bristol}
+}
+
+@inproceedings{evaluation,
+  author = {Klees, George and Ruef, Andrew and Cooper, Benji and Wei, Shiyi and Hicks, Michael},
+  title = {Evaluating Fuzz Testing},
+  year = {2018},
+  isbn = {9781450356930},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3243734.3243804},
+  doi = {10.1145/3243734.3243804},
+  abstract = {Fuzz testing has enjoyed great success at discovering security critical bugs in real software. Recently, researchers have devoted significant effort to devising new fuzzing techniques, strategies, and algorithms. Such new ideas are primarily evaluated experimentally so an important question is: What experimental setup is needed to produce trustworthy results? We surveyed the recent research literature and assessed the experimental evaluations carried out by 32 fuzzing papers. We found problems in every evaluation we considered. We then performed our own extensive experimental evaluation using an existing fuzzer. Our results showed that the general problems we found in existing experimental evaluations can indeed translate to actual wrong or misleading assessments. We conclude with some guidelines that we hope will help improve experimental evaluations of fuzz testing algorithms, making reported results more robust.},
+  booktitle = {Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security},
+  pages = {2123–2138},
+  numpages = {16},
+  keywords = {evaluation, fuzzing, security},
+  location = {Toronto, Canada},
+  series = {CCS '18}
+}
+
+@inproceedings{deduplication,
+  author = {Donaldson, Alastair F. and Thomson, Paul and Teliman, Vasyl and Milizia, Stefano and Maselco, Andr\'{e} Perez and Karpi\'{n}ski, Antoni},
+  title = {Test-case reduction and deduplication almost for free with transformation-based compiler testing},
+  year = {2021},
+  isbn = {9781450383912},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3453483.3454092},
+  doi = {10.1145/3453483.3454092},
+  abstract = {Recent transformation-based approaches to compiler testing look for mismatches between the results of pairs of equivalent programs, where one program is derived from the other by randomly applying semantics-preserving transformations. We present a formulation of transformation-based compiler testing that provides effective test-case reduction almost for free: if transformations are designed to be as small and independent as possible, standard delta debugging can be used to shrink a bug-inducing transformation sequence to a smaller subsequence that still triggers the bug. The bug can then be reported as a delta between an original and minimally-transformed program. Minimized transformation sequences can also be used to heuristically deduplicate a set of bug-inducing tests, recommending manual investigation of those that involve disparate types of transformations and thus may have different root causes. We demonstrate the effectiveness of our approach via a new tool, spirv-fuzz, the first compiler-testing tool for the SPIR-V intermediate representation that underpins the Vulkan GPU programming model.},
+  booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
+  pages = {1017–1032},
+  numpages = {16},
+  keywords = {Compilers, SPIR-V, metamorphic testing},
+  location = {Virtual, Canada},
+  series = {PLDI 2021}
+}
+
+@inproceedings{coverage,
+  author = {Inozemtseva, Laura and Holmes, Reid},
+  title = {Coverage is not strongly correlated with test suite effectiveness},
+  year = {2014},
+  isbn = {9781450327565},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/2568225.2568271},
+  doi = {10.1145/2568225.2568271},
+  abstract = {The coverage of a test suite is often used as a proxy for its ability to detect faults. However, previous studies that investigated the correlation between code coverage and test suite effectiveness have failed to reach a consensus about the nature and strength of the relationship between these test suite characteristics. Moreover, many of the studies were done with small or synthetic programs, making it unclear whether their results generalize to larger programs, and some of the studies did not account for the confounding influence of test suite size. In addition, most of the studies were done with adequate suites, which are are rare in practice, so the results may not generalize to typical test suites.  We have extended these studies by evaluating the relationship between test suite size, coverage, and effectiveness for large Java programs. Our study is the largest to date in the literature: we generated 31,000 test suites for five systems consisting of up to 724,000 lines of source code. We measured the statement coverage, decision coverage, and modified condition coverage of these suites and used mutation testing to evaluate their fault detection effectiveness.  We found that there is a low to moderate correlation between coverage and effectiveness when the number of test cases in the suite is controlled for. In addition, we found that stronger forms of coverage do not provide greater insight into the effectiveness of the suite. Our results suggest that coverage, while useful for identifying under-tested parts of a program, should not be used as a quality target because it is not a good indicator of test suite effectiveness.},
+  booktitle = {Proceedings of the 36th International Conference on Software Engineering},
+  pages = {435–445},
+  numpages = {11},
+  keywords = {Coverage, test suite effectiveness, test suite quality},
+  location = {Hyderabad, India},
+  series = {ICSE 2014}
+}

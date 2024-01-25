@@ -10,7 +10,7 @@
 \bibliographystyle{unsrtnat}
 \let\oldciteauthor\citeauthor
 \renewcommand{\citeauthor}[1]{\oldciteauthor{#1} \cite{#1}}
-
+\newcommand{\be}[1]{\textbf{\emph{#1}}}
 
 % Title
 \title{Fuzzing for Parser Combinators \\ {\large BEng Project Interim Report}}
@@ -21,43 +21,58 @@
 \begin{document}
 \maketitle
 
-% \begin{multicols}{2}
-
 \section{Introduction} % 1.5 pages
 
 % 1. Why fuzzing for parsers is important?
+% q1: how does the error example relate to the parser? it could just be inherent to the compiler
+%q: why is testing parsers vital/is it the only way to improve parser reliability?
+
 \subsection{Motivation}
 Parsers are critical components of many software systems with compilers being a stand out example. Issues in these systems can be devastating; recently, a bug in the Vyper compiler caused a security vulnerability for Curve Finance, reportedly costing up to \$62 million \cite{curve}. Extensive testing of parsing libraries is therefore vital to both support overall correctness of these systems and establish user trust. Traditional software testing methods, however, can be expensive, accounting for up to 50\% of development costs \cite{quickcheck}.
 
 % 2. In this work we do X.
 \subsection{Project}
-This project explores the application of various fuzzing techniques in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{gigaparsec} as the case study. Parser combinator libraries are generally domain specific languages (DSLs) embedded into functional host languages, resulting in strongly-typed application programming interfaces (APIs) \cite{monadic-combinators, parsec}. This highlights the first distinct advantage of the project: the specification of valid parsers is defined through typing, allowing well-defined parsers to be synthesised randomly. The second uniquely interesting aspect of this approach is that parser combinator libraries embed the target grammar into the host language \cite{combinator-parsing}. As a result, the structure of the synthesised parsers can be inspected to guide input generation for the parsers. Although many techniques are considered, metamorphic fuzzing using parser combinator laws outlined by \citeauthor{staged-selective} is the primary method investigated.
+This project explores the application of various fuzzing techniques in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{Gigaparsec} as the case study. Although many techniques are considered, metamorphic fuzzing \cite{metamorphic} using parser combinator laws outlined by \citeauthor{parsley} is the primary method investigated.
 
 \subsection{Challenges}
 % 3. interesting / challenges
-% left-recursion
-% corresponding inputs / achieving good coverage
-% - symbolic: path explosion
-% - parser directed: performance
-% - grammar based: mismatch between actual and 
+% Some of the unique challenges of this work include handling non-terminating parsers, and constructing valid inputs for generated parsers.
 
-Some of the novel challenges of this work include handling non-termination of left-recursive parsers, and constructing valid inputs for generated parsers. Left recursion 
-\cite{left-recursive}
+
+\subsubsection{Left Recursion}
+Left recursive grammars are grammars that have at least one non-terminal element eventually deriving to a form with itself as the left-most symbol \cite{left-recursive}. These grammars can be handled with chain combinators \cite{design-patterns}, but naive parser compositions can still lead to infinite recursion. In general, parsers that invoke themselves without consuming any input will not terminate and are avoided when generating new parsers.
+
+\subsubsection{Sample Generation}
+When executing randomly synthesised parsers, failing to parse an input token may cause the parser to quickly terminate. This limits both the behavioural validation and statement coverage of the test, therefore, both rejection and acceptance states should be tested. Arbitrary inputs are likely to cause substantially more parse rejections than acceptances. A significant challenge of the project is to generate inputs that should be accepted by a given parser.
 
 % 4. Previous work on X has addressed these with Y, but the problems with this are Z.
 \subsection{Prior Work}
+
+\subsubsection{Left Recursion}
+Although there has been some work towards designing parser combinators libraries that terminate with left-recursive structures \cite{left-recursive-detect}, these libraries currently face performance limitations and are not widely adopted. There is no prior work towards exploring the random generation of terminating parsers. 
+
+\subsubsection{Sample Generation}
 % parser directed fuzzing + Constraint-based test generation + left recursion address these challenged but limitations
-% Critic parser-directed fuzzing?
-\cite{left-recursive-detect}
+
+Several techniques of sample generation have been explored in the context of parsers. 
+
+\citeauthor{parser-directed} explores parser-directed fuzzing by using dynamic tainting to resolve parse rejections. This approach relies on a direct taint, which is often ineffective during tokenization stages of parsers when the data flow is broken, limiting the exploration of the input space.
+
+Symbolic execution for fuzzing tackles the sample generation challenge by using constraint solving to increases statement coverage \cite{klee}. Path explosion is particularly problematic in the context of parsers as paths are predominantly parse rejections \cite{path-explosion}. Samples that are accepted by the parser remain highly improbable \cite{parser-directed}.
+
+Grammar-based fuzzing, which involves generating samples directly from a formal grammar, avoids much of the trial and error of random input generation for parsers \cite{grammar}. Traditionally, grammars are difficult to write and maintain, often do not reflect the actual grammar implemented by a parser, and are not necessarily machine readable.
 
 % 5) This has the following appealing properties and our experiments show this and that.
-% \subsection{Results}
-% TODO: move to eval?
-% We hypothesize that any Gigapasec bugs found will have a high likelihood of being relevant in practice as seems to be the case for compiler fuzzing \cite{fuzzing-importance}. It could be argued that many bugs discovered in this project are niche cases and unlikely to be found in practice. A formal evaluation of the significance of any bugs discovered is left to future work.
+\subsection{Unique Benefits} % \subsection{Results}
+Parser combinator libraries are generally domain specific languages (DSLs) embedded into functional host languages, resulting in strongly-typed application programming interfaces (APIs) \cite{monadic-combinators, parsec}. This highlights the first uniquely interesting advantage of the project: the specification of valid parsers is defined directly through the parser typing, allowing well-defined parsers to be synthesised randomly.
+
+The second novel aspect of this approach is that parser combinator libraries embed the target grammar into the host language \cite{combinator-parsing}. The structure of the synthesised parsers can be inspected to guide valid input generation for the parsers.
+
+Considering these benefits, we propose that fuzzing for parser combinators will systematically verify parser combinator libraries by synthesising new parsers and effectively covering their input spaces.
 
 \section{Background} % 10 pages
 % TODO: google what should go in a background section?
-% gigaparsec
+% Gigaparsec
 % parsec
 % fuzzing
 % metamorphic testing
@@ -73,24 +88,72 @@ Some of the novel challenges of this work include handling non-termination of le
 %     - read paper about causes of bugs
 %     - differential against parsley: unlikely to catch unconsidered edge case: 
 %     - mutation based on laws: we must find and verify these laws
-%     - differential testing on optimisations: cannot find bugs in unoptimised gigaparsec. gigaparsec is yet to implement optimisations
+%     - differential testing on optimisations: cannot find bugs in unoptimised Gigaparsec. Gigaparsec is yet to implement optimisations
 % - Other Challenges
 
-\section{Project Plan} % 1 page
-% milestones
-% soft deadlines
-% When busy?
-% Time for write up
-% Time for running experiments
-
 \section{Evaluation Plan} % 1 page
-% old bugs
-% code coverage
-% mutation coverage?
-% new bugs
 
-% \end{multicols}
+The project is evaluated using several metrics. It is important that experiments are carried out carefully using multiple trials, statistical tests, and considering a variety of random seeds to avoid result bias \cite{evaluation}.
+
+\subsection{Unique Bugs}
+
+When evaluating the total bugs discovered during the experiments, it is important that duplication is considered. For example, a bug discovered in one parser, may also be discovered in similar parsers.
+
+Deduplication via reduction of the generated parsers and test samples would be desirable to report as many distinct bugs as possible between versions \cite{deduplication}. However, this is a non-trivial problem and is outside the scope of the project. Some bug deduplication may be possible manually, otherwise, bug duplication will be a limitation of the evaluation.
+
+\subsection{Practical Significance of Bugs}
+
+We hypothesize that any Gigaparsec bugs discovered have a high likelihood of being relevant in practical applications. \citeauthor{fuzzing-importance} demonstrates that similar is true for compiler fuzzing.
+
+However, it could still be argued that many bugs discovered in this project are niche cases and unlikely to be found through realistic use of the library. A formal evaluation of the practical significance of any bugs discovered would be interesting to explore, but this may require the analysis of a many real-world Gigaparsec parsers and is thus outside of the scope of the project.
+
+\subsection{Bug Injection}
+
+Existing fuzzing tools cannot be used for comparison since the generation of arbitrary parsers are entirely custom. Regardless, evaluating ability of the tool to discover injected bugs will allow us to validate the thoroughness of the fuzzing approach. We can use old bugs or mutation when injecting new bugs.
+
+\subsection{Statement Coverage}
+
+Statement coverage is a common evaluation metric for fuzzing. \citeauthor{coverage} argue that statement coverage is a poor indicator of test suite quality. Statement coverage does not necessarily account for the complexity of the interaction between statements, which may be especially true for parser combinators, where the interactions between combinators can be intricate. For these reasons, statement coverage is not a primary evaluation metric for this project.
+
+\subsection{Qualitative Measures}
+
+Qualitatively, the implementation should be well integrated into the Gigaparsec library, easy to use with future version, be well documented, and have detailed execution logs.
+
+\section{Project Plan} % 1 page
+
+As for my personal schedule, I am working full-time during the project and will have consistent free time (or lack thereof) from month to month. As a result, the project workload is distributed evenly.
+
+\subsection{Milestone 1: Parser Generation}
+\be{February, 2024}
+
+The first milestone is to implement generators for some of the primitive combinators in Gigaparsec using QuickCheck \cite{quickcheck}. Some progress has been made towards this goal, but more work is required to support additional generators, implement size bounds for the generated parsers, and the consider the distribution of generated parsers.
+
+\subsection{Milestone 2: Input Generation}
+\be{March, 2024}
+
+The second milestone is to implement input generation for the parsers themselves by inspecting the structure of arbitrary parsers. High coverage of the input space is important here, ideally with many inputs being accepted by the parser to test both acceptance and rejection states.
+
+\subsection{Milestone 3: Metamorphic Testing}
+\be{April, 2024}
+
+In the third milestone, parser combinators laws will be used find equivalent parsers for generated parsers, which are then tested against each other to check adherence to the laws. Apply transformations using laws with specified expected changes in behaviour is another possible form of metamorphic testing to be explored.
+
+\subsection{Milestone 4: Experiments, Evaluation, and Report}
+\be{June 17, 2024}
+
+This milestone has been allocated the largest amount of time, partially as a buffer for the previous milestones, and partially as there some uncertainty surrounding the time required for the final milestone. Both the execution time for the fuzz testing and and the hardware available are unclear. It may also be necessary to implement test case reduction to help with the interpretation of the results. The final report will be written in parallel alongside the experiments for this milestone.
+
+\subsection{Extensions}
+
+If time permits, there are a several areas for extension. Both the combinators and combinator laws could be extended to test Gigaparsec more thoroughly, alternatively, other fuzzing techniques could be explored to evaluate their potential for future research.
+
+Differential testing of Gigaparsec and Parsley \cite{garnishing} would be particularly interesting to explore. The two libraries are intended to be API compatible, but have significantly different implementations due to the differences in the host languages (Haskell and Scale respectively). Consequently, it seems plausible that there would be different sets of bugs in each library, leaving opportunity for differential testing. Parsley is also much more mature that Gigaparsec, meaning it could be used as a reference to support the stability of Gigaparsec throughout its early development and optimisation.
+
+\subsection{Fallback Plan}
+Each milestone is designed to be flexible in its totality, allowing for easy adaption to meet project deadlines. For example, in the first milestone, the number of supported combinators is variable. The second milestone is the least flexible; good coverage of the input space is required for the supported parsers. For the third milestone, the parser laws tested can be reduced. For the final milestone, the execution time for the experiments can be reduced at the cost of reduced coverage.
 
 \raggedright
 \bibliography{interim-report.bib}
 \end{document}
+
+% Similarly to other successful parser-direct fuzzing approach, the parser must be exposed to the fuzzer for our implementation.
