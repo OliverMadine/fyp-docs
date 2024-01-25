@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=3cm]{geometry}
+\usepackage{geometry}
 \usepackage{titling}
 \usepackage[numbers]{natbib}
 \usepackage{parskip}
@@ -21,7 +21,7 @@
 \begin{document}
 \maketitle
 
-\section{Introduction} % 1.5 pages
+\section{Introduction}
 
 % 1. Why fuzzing for parsers is important?
 \subsection{Motivation}
@@ -29,7 +29,7 @@ Parsers are critical components of many software systems with compilers being a 
 
 % 2. In this work we do X.
 \subsection{Project}
-This project explores the application of various fuzzing techniques in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{gigaparsec} as the case study. Although many techniques are considered, the primary method investigated involves synthesising arbitrary parsers with corresponding valid inputs and using metamorphic fuzzing \cite{metamorphic}. We aim to test the adherence of Gigaparsec to the parser combinator laws outlined by \citeauthor{parsley}.
+This project explores the application of various fuzzing in the context of parser combinator libraries, an unexplored domain, with Gigaparsec \cite{gigaparsec} as the case study. Although many techniques are considered, the primary method investigated involves synthesising arbitrary parsers with corresponding valid inputs and using metamorphic fuzzing \cite{metamorphic}. We aim to test the adherence of Gigaparsec to the parser combinator laws outlined by \citeauthor{parsley}.
 
 \subsection{Challenges}
 % 3. interesting / challenges
@@ -67,25 +67,13 @@ Left recursive grammars are grammars that have at least one non-terminal element
 Although there has been some work towards designing parser combinators libraries that terminate with left-recursive structures \cite{left-recursive-detect}, these libraries currently face performance limitations due to the expansion of left-recursive non-terminals and are not widely adopted. For these reasons, the validation of parser combinator libraries that allow infinite left recursion remains a valuable problem to solve.
 \subsubsection{Laws}
 
-Some research has been done towards formalising the behaviour of parser combinators. \citeauthor{parsley} defines various categories of parser combinators with corresponding combinator laws. \citeauthor{staged-selective} extends this work with laws specific to primitive combinators, and some derived from laws of propositional logic. Although, this set of laws is not necessarily minimal, each is useful in the scope of this project. Further work to formalise more laws in the context of parser combinator primitives could be done. Equivalences on higher level primitives may also be useful in the context of this project as finding counter examples could reveal errors in the implementation of abstract combinators.
+Some research has been done towards formalising the behaviour of parser combinators. \citeauthor{parsley} defines various categories of parser combinators with corresponding combinator laws. \citeauthor{staged-selective} extends this work with laws specific to primitive combinators, and some derived from laws of propositional logic. Although, this set of laws is not necessarily minimal, each is useful in the scope of this project. Further work to formalise more laws in the context of parser combinator primitives could be done.
 
 \subsection{Fuzzing}
-% TODO: What is fuzzing?
+Fuzzing is a software testing technique that involves using randomly generated inputs to a program to test for unexpected behaviours \cite{fuzzing-importance}. Fuzzing is a popular technique for testing compilers, but has not yet been applied to parser combinator libraries. A common problem with fuzzing is defining the expected behaviour of a program; this is known as the test oracle problem \cite{fuzzing}.
 
-% \subsubsection{Black Box Fuzzing}
-
-% \subsubsection{White Box Fuzzing}
-
-\subsubsection{Metamorphic Testing}
-% TODO: some laws are not worth testing since they are guaranteed by the type system
-% Disadvantage: we have a limited of of metamorphic relations to test
-% The parser combinator laws are defined in terms of primitives, therefore it might be harder to detect bugs in more combinators at higher levels of abstraction
-
-
-\subsubsection{Differential Testing}
-Gigaparsec and Parsley are intended to be API compatible, but have significantly different implementations due to the differences in the host languages (Haskell and Scale respectively). Consequently, it seems plausible that there would be different sets of bugs in each library, leaving opportunity for differential testing. Parsley is also much more mature that Gigaparsec, meaning it could be used as a reference to support the stability of Gigaparsec throughout its early development and optimisation.
-
-Therefore, the advantages of differential testing are that it seems promising in catching implementation errors, however, the disadvantage is that more conceptual mistakes may be repeated in both libraries and not caught when comparing between the two. For example, an incorrect optimisation step might be applied in both Gigaparsec and Parsley causing the incorrect behaviour to be consistent and thus not be caught by differential testing.
+\subsubsection{Fuzzing Classification}
+Black box fuzzing does not require the internals of the software system to be exposed to the fuzzer \cite{fuzzing}. In contrast white box fuzzing, which requires detailed knowledge of the internals of the system being tested. We can utilize white box fuzzing techniques since both the parser combinator API and the structure of arbitrary parsers are strongly typed.
 
 \subsubsection{Sample Generation}
 Several techniques of sample generation have been explored in the context of parsers. 
@@ -96,18 +84,28 @@ Symbolic execution for fuzzing tackles the sample generation challenge by using 
 
 Grammar-based fuzzing, which involves generating samples directly from a formal grammar, avoids much of the trial and error of random input generation for parsers \cite{grammar}. Traditionally, grammars are difficult to write and maintain, often do not reflect the actual grammar implemented by a parser, and are not necessarily machine readable.
 
+\subsubsection{Differential Testing}
+Gigaparsec and Parsley are intended to be API compatible, but have significantly different implementations due to the differences in the host languages (Haskell and Scale respectively). Consequently, it seems plausible that there would be different sets of bugs in each library, leaving opportunity for differential testing. Parsley is also much more mature that Gigaparsec, meaning it could be used as a reference to support the stability of Gigaparsec throughout its early development and optimisation.
+
+Therefore, the advantages of differential testing are that it seems promising in catching implementation errors, however, the disadvantage is that more conceptual mistakes may be repeated in both libraries and not caught when comparing between the two. For example, an incorrect optimisation step might be applied in both Gigaparsec and Parsley causing the incorrect behaviour to be consistent and thus not be caught by differential testing.
+
+\subsubsection{QuickSpec}
+
+QuickSpec is a tool for automated algebraic specification generation \cite{quickspec}. It could be applicable here to quickly extend the set of parser combinator laws. The generated laws can help to identify bugs when recognised as invalid and help us extend our laws to better understand the behaviour of parser combinators.
+
+One disadvantage of this tool is that it relies on randomised testing, occasionally invalid laws may be discovered simply because a counter counter example is not found, which is not necessarily indicative of a library bug. Another disadvantage is that the process is not automated; generated laws need to be manually inspected to validate or recognise issues.
+
+\subsubsection{Metamorphic Testing}
+
+Metamorphic testing is a form of fuzz testing that involves testing a specified relationship between two versions of a program \cite{metamorphic}. The parser laws could be leveraged as initial metamorphic relations, however, these laws are defined in terms of primitive combinators, therefore it might be harder to detect bugs in combinators at higher levels of abstraction. To extend the implementation to cover these combinators, more metamorphic relations using higher level combinators would need to be defined.
+
 \subsubsection{QuickCheck}
 
 QuickCheck is a Haskell library for property based testing \cite{quickcheck}. It allows properties to be specified as Haskell function, which are then tested with randomly generated inputs. It has support for custom data generators, monitoring of test data distribution, and infinite structures. 
 
-\subsubsection{QuickSpec}
-
-QuickSpec is a tool for automated algebraic specification generation \cite{quickspec}. It could be applicable here to quickly extend the set of parser combinator laws. The generated laws can help to identify bugs when recognised as invalid and help us understand the behaviour of the library better.
-
-One disadvantage of this tool is that it relies on randomised testing, occasionally invalid laws may be discovered simply because a counter counter example is not found, which is not necessarily indicative of a library bug. Another disadvantage is that the process is not automated; generated laws need to be manually inspected to validate or recognise issues.
-
 \subsection{Summary}
-% TODO: There is no prior work towards exploring the random generation of terminating parsers. 
+
+We have discussed how various fuzzing techniques apply considering the  of parser combinator libraries. We narrowed to a white box fuzzing approach to leverage our unique knowledge of the parser structure, which follows the structure of the target grammar and is uniquely advantageous for solving the sample generation problem. Considering differential fuzzing, we determined that there is potential for bug duplication across implementations. Considering QuickSpec for formal specification generation, we found that the potential for false positives would require too much manual verification. Finally, we determined that metamorphic testing is a promising approach to build on the existing knowledge of parser combinators laws. Further investigation into the most effective metamorphic relations may be required to scale the solution beyond this project.
 
 \section{Evaluation Plan} % 1 page
 
