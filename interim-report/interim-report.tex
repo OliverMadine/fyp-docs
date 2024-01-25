@@ -70,9 +70,17 @@ Although there has been some work towards designing parser combinators libraries
 Some research has been done towards formalising the behaviour of parser combinators. \citeauthor{parsley} defines various categories of parser combinators with corresponding combinator laws. \citeauthor{staged-selective} extends this work with laws specific to primitive combinators, and some derived from laws of propositional logic. Although, this set of laws is not necessarily minimal, each is useful in the scope of this project. Further work to formalise more laws in the context of parser combinator primitives could be done. Equivalences on higher level primitives may also be useful in the context of this project as finding counter examples could reveal errors in the implementation of abstract combinators.
 
 \subsection{Fuzzing}
-% What is fuzzing?
+% TODO: What is fuzzing?
+
+% \subsubsection{Black Box Fuzzing}
+
+% \subsubsection{White Box Fuzzing}
+
 \subsubsection{Metamorphic Testing}
-% some laws are not worth testing since they are guaranteed by the type system
+% TODO: some laws are not worth testing since they are guaranteed by the type system
+% Disadvantage: we have a limited of of metamorphic relations to test
+% The parser combinator laws are defined in terms of primitives, therefore it might be harder to detect bugs in more combinators at higher levels of abstraction
+
 
 \subsubsection{Differential Testing}
 Gigaparsec and Parsley are intended to be API compatible, but have significantly different implementations due to the differences in the host languages (Haskell and Scale respectively). Consequently, it seems plausible that there would be different sets of bugs in each library, leaving opportunity for differential testing. Parsley is also much more mature that Gigaparsec, meaning it could be used as a reference to support the stability of Gigaparsec throughout its early development and optimisation.
@@ -90,11 +98,16 @@ Grammar-based fuzzing, which involves generating samples directly from a formal 
 
 \subsubsection{QuickCheck}
 
+QuickCheck is a Haskell library for property based testing \cite{quickcheck}. It allows properties to be specified as Haskell function, which are then tested with randomly generated inputs. It has support for custom data generators, monitoring of test data distribution, and infinite structures. 
+
 \subsubsection{QuickSpec}
 
+QuickSpec is a tool for automated algebraic specification generation \cite{quickspec}. It could be applicable here to quickly extend the set of parser combinator laws. The generated laws can help to identify bugs when recognised as invalid and help us understand the behaviour of the library better.
+
+One disadvantage of this tool is that it relies on randomised testing, occasionally invalid laws may be discovered simply because a counter counter example is not found, which is not necessarily indicative of a library bug. Another disadvantage is that the process is not automated; generated laws need to be manually inspected to validate or recognise issues.
 
 \subsection{Summary}
-% There is no prior work towards exploring the random generation of terminating parsers. 
+% TODO: There is no prior work towards exploring the random generation of terminating parsers. 
 
 \section{Evaluation Plan} % 1 page
 
