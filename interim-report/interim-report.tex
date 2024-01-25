@@ -9,7 +9,6 @@
 % Config
 \bibliographystyle{unsrtnat}
 \let\oldciteauthor\citeauthor
-\pagenumbering{gobble}
 \renewcommand{\citeauthor}[1]{\oldciteauthor{#1} \cite{#1}}
 \newcommand{\be}[1]{\textbf{\emph{#1}}}
 
@@ -61,7 +60,7 @@ Parser Combinator libraries are an increasingly popular method of writing parser
 \subsubsection{Grammars}
 Context free grammars are grammars formed from a set of recursive rules, where each rule is a non-terminal that produces a sequence of terminal and/or non-terminal symbols \cite{context}. In a context free grammar, a production rule can be applied regardless of the context. Context free grammars can be parsed without maintaining any context throughout the parsing the prior symbols \cite{parsley}.
 
-In a context sensitive grammar (CFG), a the previously parsed symbols may be considered when applying a production rule \cite{context}. Context sensitive grammars require the parser to maintain a context throughout the parsing of the input \cite{parsley}. Monadic parser combinators can handle CFGs by passing some context through the combinators \cite{parsley}.
+In a context sensitive grammar (CSG), a the previously parsed symbols may be considered when applying a production rule \cite{context}. Context sensitive grammars require the parser to maintain a context throughout the parsing of the input \cite{parsley}. Monadic parser combinators can handle CSGs by passing some context through the combinators \cite{parsley}.
 
 \subsubsection{Parsec}
 Parsec \cite{parsec} is a popular monadic parser combinator library for Haskell that avoids space leaks and improves on the error messages of previous work. It was one of the earlier parser combinator libraries and has since been widely adopted, however, it historically suffers in performance when compared with parser generators \cite{staged-selective}.
